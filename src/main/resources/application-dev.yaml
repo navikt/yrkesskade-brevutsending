@@ -5,3 +5,27 @@ dokarkiv.url: https://dokarkiv.dev-fss-pub.nais.io
 
 SAF_APP_CLIENT_ID: dev-fss.teamdokumenthandtering.saf
 DOKARKIV_CLIENT_ID: dev-fss.teamdokumenthandtering.dokarkiv-q1
+
+no.nav.security.jwt:
+  issuer:
+    azuread:
+      discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
+      accepted_audience: ${AZURE_APP_CLIENT_ID}
+  client:
+    registration:
+      saf-maskintilmaskin:
+        token-endpoint-url: https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token
+        grant-type: client_credentials
+        scope: api://${SAF_APP_CLIENT_ID}/.default
+        authentication:
+          client-id: ${AZURE_APP_CLIENT_ID}
+          client-jwk: ${AZURE_APP_JWK}
+          client-auth-method: private_key_jwt
+      dokarkiv-maskintilmaskin:
+        token-endpoint-url: https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token
+        grant-type: client_credentials
+        scope: api://${DOKARKIV_CLIENT_ID}/.default
+        authentication:
+          client-id: ${AZURE_APP_CLIENT_ID}
+          client-jwk: ${AZURE_APP_JWK}
+          client-auth-method: private_key_jwt

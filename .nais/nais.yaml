@@ -1,0 +1,61 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: yrkesskade-brevutsending
+  namespace: yrkesskade
+  labels:
+    team: yrkesskade
+spec:
+  image: {{image}}
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: {{springProfile}}
+  liveness:
+    path: /internal/health
+    port: 8080
+    initialDelay: 20
+    timeout: 60
+  readiness:
+    path: /internal/health
+    port: 8080
+    initialDelay: 20
+    timeout: 60
+  replicas:
+    min: 2
+    max: 2
+    cpuThresholdPercentage: 50
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  accessPolicy:
+    inbound:
+      rules:
+        - application: yrkesskade-prosessering
+      external:
+      {{#each externalHosts}}
+        - host: {{host}}
+          {{#if ports}}
+          ports:
+            {{#each ports}}
+            - name: {{name}}
+              port: {{port}}
+              protocol: {{protocol}}
+            {{/each}}
+          {{/if}}
+      {{/each}}
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+    requests:
+      cpu: 200m
+      memory: 1024Mi
+  ingresses: 
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
+  azure:
+    application:
+      enabled: true
+  secureLogs:
+    enabled: true

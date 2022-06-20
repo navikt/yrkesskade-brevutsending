@@ -1,0 +1,27 @@
+name: Kjør tester for yrkesskade-brevutsending
+on:
+  push:
+    branches-ignore:
+      - main # Byggeskript på main branchen kjører testene selv
+      - dev
+env:
+  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: compile and run tests
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.READER_TOKEN }}
+        run: mvn verify

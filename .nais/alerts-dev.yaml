@@ -1,0 +1,21 @@
+apiVersion: nais.io/v1
+kind: Alert
+metadata:
+  name: yrkesskade-brevutsending
+  namespace: yrkesskade
+  labels:
+    team: yrkesskade
+spec:
+  receivers:
+    slack:
+      channel: yrkesskade-alerts-dev
+      prependText: "<!here> | "
+  alerts:
+  - alert: yrkesskade-brevutsending er nede
+    description: App {{ $labels.deployment }} er nede i namespace {{ $labels.namespace }}
+    expr: kube_deployment_status_replicas_available{deployment="yrkesskade-brevutsending"} == 0
+    for: 2m
+    action: "Sjekk logger for {{ $labels.deployment }}"
+    documentation: https://confluence.adeo.no/display/MAYYMYFSN/Drift+og+forvaltning
+    sla: Responder innen 1 time i kontortid
+    severity: danger

@@ -1,0 +1,7 @@
+YRKESSKADE_DOKGEN_API_URL: http://yrkesskade-dokgen.default
+YRKESSKADE_KODEVERK_API_URL: https://yrkesskade-kodeverk.dev.intern.nav.no
+saf.graphql.url: https://saf.dev-fss-pub.nais.io/graphql
+dokarkiv.url: https://dokarkiv.dev-fss-pub.nais.io
+
+SAF_APP_CLIENT_ID: dev-fss.teamdokumenthandtering.saf
+DOKARKIV_CLIENT_ID: dev-fss.teamdokumenthandtering.dokarkiv-q1

@@ -15,20 +15,56 @@ data class DokumentInfoId(
 )
 
 data class OpprettJournalpostRequest(
-//    val forsoekFerdigstill: Boolean,
+    val forsoekFerdigstill: Boolean,
     val tittel: String,
     val journalposttype: Journalposttype,
     val avsenderMottaker: AvsenderMottaker,
     val bruker: Bruker,
     val tema: String? = "YRK",
     val kanal: String? = "NAV_NO",
+    val journalfoerendeEnhet: String,
     val eksternReferanseId: String,
-    val datoMottatt: String,
-    val dokumenter: List<Dokument>
+    val datoMottatt: String?,
+    val dokumenter: List<Dokument>,
+    val sak: Sak
 )
 
+data class Sak(
+    val sakstype: Sakstype,
+    val fagsakId: String,
+    val fagsaksystem: Fagsaksystem
+)
+
+enum class Fagsaksystem {
+    // her må vi legge inn vårt eget fagsaksystem, må ta kontakt med team dokumenthåndtering
+    YRKESSKADE,
+    AO01,
+    AO11,
+    BISYS,
+    FS36,
+    FS38,
+    IT01,
+    K9,
+    OB36,
+    OEBS,
+    PP01,
+    UFM,
+    BA,
+    EF,
+    KONT,
+    SUPSTONAD,
+    OMSORGSPENGER,
+    HJELPEMIDLER,
+}
+
+enum class Sakstype {
+    FAGSAK,
+    GENERELL_SAK,
+    ARKIVSAK // deprekert
+}
+
 data class AvsenderMottaker(
-    val navn: String,
+    val navn: String?,
     val id: String,
     val idType: BrukerIdType,
 )

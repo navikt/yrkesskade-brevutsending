@@ -8,6 +8,8 @@ data class DistribuerJournalpostRequest(
     val distribusjonstidspunkt: String = Distribusjonstidspunkt.KJERNETID.name
 )
 
+data class DistribuerJournalpostResponse(val bestillingsId: String)
+
 enum class Distribusjonstype {
     VEDTAK,
     VIKTIG,

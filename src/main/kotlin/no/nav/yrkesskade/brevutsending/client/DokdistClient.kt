@@ -55,17 +55,12 @@ class DokdistClient(
             return function.invoke()
         } catch (ex: WebClientResponseException) {
             secureLogger.error(
-                "Got a {} error calling Dokarkiv {} {} with message {}",
+                "Got a {} error calling Dokdist {} {} with message {}",
                 ex.statusCode,
                 ex.request?.method ?: "-",
                 ex.request?.uri ?: "-",
                 ex.responseBodyAsString
             )
-            if (ex.statusCode == HttpStatus.CONFLICT) {
-                log.warn("Dokumentet har allerede blitt journalført.")
-                return null
-            }
-            throw ex
         } catch (rtex: RuntimeException) {
             log.warn("Caught RuntimeException", rtex)
             throw rtex

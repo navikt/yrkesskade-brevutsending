@@ -49,6 +49,11 @@
 			<artifactId>graphql-kotlin-spring-client</artifactId>
 			<version>${graphql-kotlin.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>6.6</version>
+		</dependency>
 
 		<!-- Security -->
 		<dependency>

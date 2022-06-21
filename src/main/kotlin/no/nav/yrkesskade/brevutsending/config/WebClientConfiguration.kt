@@ -12,6 +12,7 @@ import reactor.netty.http.client.HttpClient
 class WebClientConfiguration(
     private val webClientBuilder: WebClient.Builder,
     @Value("\${dokarkiv.url}") val dokarkivServiceURL: String,
+    @Value("\${dokdist.url}") val dokdistServiceURL: String,
     @Value("\${YRKESSKADE_DOKGEN_API_URL}") val pdfServiceURL: String
     ) {
 
@@ -24,6 +25,14 @@ class WebClientConfiguration(
     fun dokarkivWebClient(): WebClient {
         return webClientBuilder
             .baseUrl(dokarkivServiceURL)
+            .clientConnector(ReactorClientHttpConnector(HttpClient.newConnection()))
+            .build()
+    }
+
+    @Bean
+    fun dokdistWebClient(): WebClient {
+        return webClientBuilder
+            .baseUrl(dokdistServiceURL)
             .clientConnector(ReactorClientHttpConnector(HttpClient.newConnection()))
             .build()
     }

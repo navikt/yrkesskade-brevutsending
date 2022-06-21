@@ -33,10 +33,9 @@ class SafClient(
 
     fun hentOppdatertJournalpost(journalpostId: String): Journalpost.Result? {
         val token = tokenUtil.getAppAccessTokenWithSafScope()
-        logger.info("Hentet token for Saf")
         val journalpostQuery = Journalpost(Journalpost.Variables(journalpostId))
 
-        logger.info("Henter oppdatert journalpost for id $journalpostId på url $safGraphqlUrl")
+        logger.info("Henter oppdatert journalpost for id $journalpostId")
         val oppdatertJournalpost: Journalpost.Result?
         runBlocking {
             val response: GraphQLClientResponse<Journalpost.Result> = client.execute(journalpostQuery) {

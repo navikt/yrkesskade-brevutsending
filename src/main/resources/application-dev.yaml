@@ -7,10 +7,6 @@ SAF_APP_CLIENT_ID: dev-fss.teamdokumenthandtering.saf
 DOKARKIV_CLIENT_ID: dev-fss.teamdokumenthandtering.dokarkiv-q1
 
 no.nav.security.jwt:
-  issuer:
-    azuread:
-      discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
-      accepted_audience: ${AZURE_APP_CLIENT_ID}
   client:
     registration:
       saf-maskintilmaskin:

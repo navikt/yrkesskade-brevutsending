@@ -1,6 +1,18 @@
 spring:
   application.name: yrkesskade-brevutsending
   autoconfigure.exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS}
+    client-id: yrkesskade-brevutsending
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: yrkesskade-brevutsending
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring.json.trusted.packages: no.nav.yrkesskade.model
+    listener:
+      ack-mode: record
   main:
     banner-mode: "off"
   management:
@@ -17,3 +29,7 @@ spring:
     export.prometheus.enabled: true
     tags:
       application: ${spring.application.name}
+
+kafka:
+  topic:
+    brev-skal-sendes: yrkesskade.privat-yrkesskade-brevskalsendes

@@ -1,11 +1,15 @@
 package no.nav.yrkesskade.brevutsending.kafka;
 
+import no.nav.yrkesskade.brevutsending.util.kallMetodeMedCallId
+import no.nav.yrkesskade.prosessering.domene.TaskRepository
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class BrevSkalSendesConsumer {
+class BrevSkalSendesConsumer(
+    private val taskRepository: TaskRepository
+) {
 
     @KafkaListener(
         id = "brev-skal-sendes",
@@ -14,7 +18,9 @@ class BrevSkalSendesConsumer {
         idIsGroup = false
     )
     @Transactional
-    fun listen() {
-        println("her skal vi opprette en task")
+    fun listen(record: String) {
+        kallMetodeMedCallId {
+//            taskRepository.save(ProsesserBrevTilUtsendingTask.opprettTask(record))
+        }
     }
 }

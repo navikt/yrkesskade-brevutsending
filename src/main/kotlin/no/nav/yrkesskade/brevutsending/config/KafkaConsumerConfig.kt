@@ -15,7 +15,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer
 class KafkaConsumerConfig : AbstractKafkaConfig() {
 
     @Bean
-    fun brevSkalSendesListenerContainerFactory(kafkaProperties: KafkaProperties, environment: Environment):
+    fun brevutsendelseBestiltListenerContainerFactory(kafkaProperties: KafkaProperties, environment: Environment):
             ConcurrentKafkaListenerContainerFactory<String, String> {
 
         val consumerProperties = kafkaProperties.buildConsumerProperties().apply {

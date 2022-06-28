@@ -2,3 +2,4 @@ externalHosts:
   - host: saf.dev-fss-pub.nais.io
   - host: dokarkiv.dev-fss-pub.nais.io
 springProfile: dev
+kafkaPool: nav-dev

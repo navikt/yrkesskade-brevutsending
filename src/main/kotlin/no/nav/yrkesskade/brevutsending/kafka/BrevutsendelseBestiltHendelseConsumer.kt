@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class BrevSkalSendesConsumer(
+class BrevutsendelseBestiltHendelseConsumer(
     private val taskRepository: TaskRepository
 ) {
 
     @KafkaListener(
-        id = "brev-skal-sendes",
-        topics = ["\${kafka.topic.brev-skal-sendes}"],
-        containerFactory = "brevSkalSendesListenerContainerFactory",
+        id = "brevutsendelse-bestilt",
+        topics = ["\${kafka.topic.brevutsendelse-bestilt}"],
+        containerFactory = "brevutsendelseBestiltListenerContainerFactory",
         idIsGroup = false
     )
     @Transactional

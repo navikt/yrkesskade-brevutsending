@@ -32,4 +32,4 @@ spring:
 
 kafka:
   topic:
-    brev-skal-sendes: yrkesskade.privat-yrkesskade-brevskalsendes
+    brevutsendelse-bestilt: yrkesskade.privat-brevutsendelse-bestilt

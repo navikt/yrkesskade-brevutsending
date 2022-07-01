@@ -13,6 +13,19 @@ spring:
         spring.json.trusted.packages: no.nav.yrkesskade.model
     listener:
       ack-mode: record
+  datasource:
+    url: jdbc:postgresql://${YRKESSKADE_BREVUTSENDING_DB_HOST}:${YRKESSKADE_BREVUTSENDING_DB_PORT}/${YRKESSKADE_BREVUTSENDING_DB_DATABASE}
+    username: ${YRKESSKADE_BREVUTSENDING_DB_USERNAME}
+    password: ${YRKESSKADE_BREVUTSENDING_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-test-query: "select 1"
+      max-lifetime: 30000
+      minimum-idle: 1
+      data-source-properties.stringtype: unspecified # Nødvendig for å kunde sende en String til et json-felt i PostgresSql
+  flyway:
+    enabled: true
   main:
     banner-mode: "off"
   management:
@@ -29,6 +42,16 @@ spring:
     export.prometheus.enabled: true
     tags:
       application: ${spring.application.name}
+
+prosessering:
+  continuousRunning.enabled: true
+  maxantall: 5
+  fixedDelayString:
+    in:
+      milliseconds: 5000
+  delete:
+    after:
+      weeks: 1
 
 kafka:
   topic:

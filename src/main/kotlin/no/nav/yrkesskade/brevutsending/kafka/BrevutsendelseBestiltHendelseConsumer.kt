@@ -1,5 +1,7 @@
 package no.nav.yrkesskade.brevutsending.kafka;
 
+import no.nav.yrkesskade.brevutsending.domene.BrevutsendelseBestiltHendelse
+import no.nav.yrkesskade.brevutsending.task.ProsesserBrevTilUtsendingTask
 import no.nav.yrkesskade.brevutsending.util.kallMetodeMedCallId
 import no.nav.yrkesskade.prosessering.domene.TaskRepository
 import org.springframework.kafka.annotation.KafkaListener
@@ -18,9 +20,9 @@ class BrevutsendelseBestiltHendelseConsumer(
         idIsGroup = false
     )
     @Transactional
-    fun listen(record: String) {
-        kallMetodeMedCallId {
-//            taskRepository.save(ProsesserBrevTilUtsendingTask.opprettTask(record))
+    fun listen(record: BrevutsendelseBestiltHendelse) {
+        kallMetodeMedCallId(record.metadata.navCallId) {
+            taskRepository.save(ProsesserBrevTilUtsendingTask.opprettTask(record))
         }
     }
 }

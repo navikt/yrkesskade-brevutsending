@@ -1,0 +1,43 @@
+YRKESSKADE_DOKGEN_API_URL: stub
+#YRKESSKADE_KODEVERK_API_URL: https://yrkesskade-kodeverk.dev.intern.nav.no
+saf.graphql.url: stub
+dokarkiv.url: stub
+dokdist.url: stub
+
+spring:
+  config:
+    activate:
+      on-profile: integration
+  datasource:
+    hikari:
+      auto-commit: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS}
+    consumer:
+      auto-offset-reset: earliest
+      group-id: yrkesskade
+    client-id: yrkesskade
+
+no.nav.security.jwt:
+  client:
+    registration:
+      saf-maskintilmaskin:
+        token-endpoint-url: http://localhost:${mock-oauth2-server.port}/azuread/token
+        grant-type: client_credentials
+        scope: saf
+        authentication:
+          client-id: dummy-client-id
+          client-secret: dummy-secret
+          client-auth-method: client_secret_basic
+      dokarkiv-maskintilmaskin:
+        token-endpoint-url: http://localhost:${mock-oauth2-server.port}/azuread/token
+        grant-type: client_credentials
+        scope: dokarkiv
+        authentication:
+          client-id: dummy-client-id
+          client-secret: dummy-secret
+          client-auth-method: client_secret_basic
+
+mock:
+  enabled: true
+  port: 10093

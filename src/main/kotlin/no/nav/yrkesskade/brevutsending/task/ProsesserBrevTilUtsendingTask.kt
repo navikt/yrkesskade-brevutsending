@@ -4,6 +4,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.yrkesskade.brevutsending.domene.Brev
+import no.nav.yrkesskade.brevutsending.domene.BrevutsendelseBestiltHendelse
 import no.nav.yrkesskade.brevutsending.service.BrevService
 import no.nav.yrkesskade.brevutsending.util.getSecureLogger
 import no.nav.yrkesskade.prosessering.AsyncTaskStep
@@ -28,7 +29,7 @@ class ProsesserBrevTilUtsendingTask(
 
     val log: Logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
     private val secureLogger = getSecureLogger()
-    val jacksonObjectMapper = jacksonObjectMapper()
+    val jacksonObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
     override fun doTask(task: Task) {
         log.info("Starter ProsesserBrevTilUtsendingTask")
@@ -36,15 +37,17 @@ class ProsesserBrevTilUtsendingTask(
 
         val payload = jacksonObjectMapper.readValue<ProsesserBrevTilUtsendingTaskPayloadDto>(task.payload)
 
+        brevService.behandleBrevutsendingBestilling(payload.brevutsendelseBestiltHendelse)
+
         log.info("ProsesserBrevTilUtsendingTask ferdig")
     }
 
     companion object {
-        fun opprettTask(brev: Brev): Task {
+        fun opprettTask(brevutsendelseBestiltHendelse: BrevutsendelseBestiltHendelse): Task {
             val jacksonObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
             return Task(
                 type = TASK_STEP_TYPE,
-                payload = jacksonObjectMapper.writeValueAsString(ProsesserBrevTilUtsendingTaskPayloadDto(brev))
+                payload = jacksonObjectMapper.writeValueAsString(ProsesserBrevTilUtsendingTaskPayloadDto(brevutsendelseBestiltHendelse))
             )
         }
 
@@ -52,4 +55,4 @@ class ProsesserBrevTilUtsendingTask(
     }
 }
 
-data class ProsesserBrevTilUtsendingTaskPayloadDto(val brev: Brev)
+data class ProsesserBrevTilUtsendingTaskPayloadDto(val brevutsendelseBestiltHendelse: BrevutsendelseBestiltHendelse)

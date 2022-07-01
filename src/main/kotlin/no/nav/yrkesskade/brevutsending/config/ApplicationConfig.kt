@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 
 @SpringBootConfiguration
-@ComponentScan("no.nav.yrkesskade.prosessering", "no.nav.yrkesskade.brevutsending", "no.nav.familie.sikkerhet")
+@ComponentScan("no.nav.yrkesskade", "no.nav.familie.sikkerhet")
 @EnableRetry
 @ConfigurationPropertiesScan
 @EnableScheduling

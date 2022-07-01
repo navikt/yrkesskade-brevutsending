@@ -5,6 +5,7 @@ import no.nav.yrkesskade.brevutsending.client.DokdistClient
 import no.nav.yrkesskade.brevutsending.client.PdfClient
 import no.nav.yrkesskade.brevutsending.domene.AvsenderMottaker
 import no.nav.yrkesskade.brevutsending.domene.Brev
+import no.nav.yrkesskade.brevutsending.domene.BrevutsendelseBestiltHendelse
 import no.nav.yrkesskade.brevutsending.domene.Bruker
 import no.nav.yrkesskade.brevutsending.domene.BrukerIdType
 import no.nav.yrkesskade.brevutsending.domene.DistribuerJournalpostRequest
@@ -18,15 +19,21 @@ import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostRequest
 import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostResponse
 import no.nav.yrkesskade.brevutsending.domene.Sak
 import no.nav.yrkesskade.brevutsending.domene.Sakstype
-import no.nav.yrkesskade.brevutsending.util.TokenUtil
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class BrevService(
     val dokarkivClient: DokarkivClient,
     val dokdistClient: DokdistClient,
     val pdfClient: PdfClient
 ) {
+
+
+    fun behandleBrevutsendingBestilling(brevutsendelseBestiltHendelse: BrevutsendelseBestiltHendelse) {
+        opprettPdf(brevutsendelseBestiltHendelse.brev)
+//        journalfoerUtgaaendeDokument()
+//        distribuerJournalpost()
+    }
 
     fun opprettPdf(brev: Brev) {
 //        pdfClient.lagPdf()

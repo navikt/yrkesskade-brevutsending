@@ -6,11 +6,12 @@ spring:
     client-id: yrkesskade-brevutsending
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: yrkesskade-brevutsending
       auto-offset-reset: earliest
       enable-auto-commit: false
       properties:
-        spring.json.trusted.packages: no.nav.yrkesskade.model
+        spring.json.trusted.packages: no.nav.yrkesskade.saksbehandling.model
     listener:
       ack-mode: record
   datasource:
@@ -55,4 +56,4 @@ prosessering:
 
 kafka:
   topic:
-    brevutsendelse-bestilt: yrkesskade.privat-brevutsendelse-bestilt
+    brevutsending-bestilt: yrkesskade.privat-brevutsending-bestilt

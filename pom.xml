@@ -18,6 +18,7 @@
 		<kotlin.version>1.6.21</kotlin.version>
 		<token-support.version>1.3.9</token-support.version>
 		<graphql-kotlin.version>5.2.0</graphql-kotlin.version>
+		<yrkesskade-backend-felles.version>9d1ea0d6_202207131457</yrkesskade-backend-felles.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -69,6 +70,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>no.nav.yrkesskade</groupId>
+			<artifactId>saksbehandling</artifactId>
+			<version>${yrkesskade-backend-felles.version}</version>
 		</dependency>
 
 		<!-- Security -->

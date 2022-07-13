@@ -4,8 +4,6 @@ import no.nav.yrkesskade.brevutsending.client.DokarkivClient
 import no.nav.yrkesskade.brevutsending.client.DokdistClient
 import no.nav.yrkesskade.brevutsending.client.PdfClient
 import no.nav.yrkesskade.brevutsending.domene.AvsenderMottaker
-import no.nav.yrkesskade.brevutsending.domene.Brev
-import no.nav.yrkesskade.brevutsending.domene.BrevutsendelseBestiltHendelse
 import no.nav.yrkesskade.brevutsending.domene.Bruker
 import no.nav.yrkesskade.brevutsending.domene.BrukerIdType
 import no.nav.yrkesskade.brevutsending.domene.DistribuerJournalpostRequest
@@ -19,6 +17,8 @@ import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostRequest
 import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostResponse
 import no.nav.yrkesskade.brevutsending.domene.Sak
 import no.nav.yrkesskade.brevutsending.domene.Sakstype
+import no.nav.yrkesskade.saksbehandling.model.Brev
+import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,8 +29,8 @@ class BrevService(
 ) {
 
 
-    fun behandleBrevutsendingBestilling(brevutsendelseBestiltHendelse: BrevutsendelseBestiltHendelse) {
-        opprettPdf(brevutsendelseBestiltHendelse.brev)
+    fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
+        opprettPdf(brevutsendingBestiltHendelse.brev)
 //        journalfoerUtgaaendeDokument()
 //        distribuerJournalpost()
     }
@@ -61,7 +61,7 @@ class BrevService(
             tema = "YRK",
             kanal = "NAV_NO", // stemmer dette??
             journalfoerendeEnhet = "9999", // erstatte med enhet fra token
-            eksternReferanseId = "", // noe lurt
+            eksternReferanseId = "", // noe lurt; kanskje referanse-id fra Behandling-tabellen i ys-sak?
             datoMottatt = null,
             sak = Sak(
                 sakstype = Sakstype.FAGSAK,

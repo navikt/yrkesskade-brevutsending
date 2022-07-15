@@ -17,8 +17,11 @@ import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostRequest
 import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostResponse
 import no.nav.yrkesskade.brevutsending.domene.Sak
 import no.nav.yrkesskade.brevutsending.domene.Sakstype
+import no.nav.yrkesskade.brevutsending.util.getSecureLogger
 import no.nav.yrkesskade.saksbehandling.model.Brev
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
+import no.nav.yrkesskade.saksbehandling.model.pdf.PdfTemplate
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -28,15 +31,20 @@ class BrevService(
     val pdfClient: PdfClient
 ) {
 
-
-    fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
-        opprettPdf(brevutsendingBestiltHendelse.brev)
-//        journalfoerUtgaaendeDokument()
-//        distribuerJournalpost()
+    companion object {
+        @Suppress("JAVA_CLASS_ON_COMPANION")
+        private val log = LoggerFactory.getLogger(javaClass.enclosingClass)
+        private val secureLogger = getSecureLogger()
     }
 
-    fun opprettPdf(brev: Brev) {
-//        pdfClient.lagPdf()
+    fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
+        val brev = brevutsendingBestiltHendelse.brev
+        val pdf = pdfClient.lagPdf(
+            pdfData = brev.innhold,
+            template = PdfTemplate.TANNLEGEERKLAERING_VEILEDNING
+        )
+        journalfoerUtgaaendeDokument(brev, pdf)
+//        distribuerJournalpost()
     }
 
     fun distribuerJournalpost(journalpostId: String) {
@@ -44,7 +52,7 @@ class BrevService(
         dokdistClient.distribuerJournalpost(distribuerJournalpostRequest)
     }
 
-    fun journalfoerUtgaaendeDokument(brev: Brev): OpprettJournalpostResponse? {
+    fun journalfoerUtgaaendeDokument(brev: Brev, pdf: ByteArray): OpprettJournalpostResponse? {
         val opprettJournalpostRequest = OpprettJournalpostRequest(
             forsoekFerdigstill = true,
             tittel = brev.tittel,
@@ -76,7 +84,7 @@ class BrevService(
                         Dokumentvariant(
                             filtype = Filtype.PDFA,
                             variantformat = Dokumentvariantformat.ARKIV,
-                            fysiskDokument = ByteArray(1) // bytte ut med ekte pdf
+                            fysiskDokument = pdf
                         )
                     )
                 ),

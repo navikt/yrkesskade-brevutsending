@@ -3,9 +3,9 @@ package no.nav.yrkesskade.brevutsending.client
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import no.nav.yrkesskade.brevutsending.domene.PdfData
-import no.nav.yrkesskade.brevutsending.domene.PdfTemplate
 import no.nav.yrkesskade.brevutsending.util.getSecureLogger
+import no.nav.yrkesskade.saksbehandling.model.pdf.PdfData
+import no.nav.yrkesskade.saksbehandling.model.pdf.PdfTemplate
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.retry.annotation.Retryable

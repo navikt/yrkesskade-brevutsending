@@ -56,4 +56,4 @@ prosessering:
 
 kafka:
   topic:
-    brevutsending-bestilt: yrkesskade.privat-brevutsending-bestilt
+    brevutsending-bestilt: yrkesskade.privat-yrkesskade-brevutsending-bestilt

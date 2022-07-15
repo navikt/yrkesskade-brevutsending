@@ -29,7 +29,7 @@ spring:
     enabled: true
   main:
     banner-mode: "off"
-  management:
+management:
   endpoint:
     health:
       show-details: always

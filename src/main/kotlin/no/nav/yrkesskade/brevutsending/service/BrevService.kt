@@ -43,7 +43,7 @@ class BrevService(
             pdfData = brev.innhold,
             template = PdfTemplate.TANNLEGEERKLAERING_VEILEDNING
         )
-        journalfoerUtgaaendeDokument(brev, pdf)
+//        journalfoerUtgaaendeDokument(brev, pdf)
 //        distribuerJournalpost()
     }
 

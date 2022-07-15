@@ -20,7 +20,6 @@ import no.nav.yrkesskade.brevutsending.domene.Sakstype
 import no.nav.yrkesskade.brevutsending.util.getSecureLogger
 import no.nav.yrkesskade.saksbehandling.model.Brev
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
-import no.nav.yrkesskade.saksbehandling.model.pdf.PdfTemplate
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -41,7 +40,7 @@ class BrevService(
         val brev = brevutsendingBestiltHendelse.brev
         val pdf = pdfClient.lagPdf(
             pdfData = brev.innhold,
-            template = PdfTemplate.TANNLEGEERKLAERING_VEILEDNING
+            template = brev.template
         )
 //        journalfoerUtgaaendeDokument(brev, pdf)
 //        distribuerJournalpost()

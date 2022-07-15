@@ -36,7 +36,7 @@ class PdfClient(
                 .uri { uriBuilder ->
                     uriBuilder.pathSegment("template")
                         .pathSegment(template.templatenavn)
-                        .pathSegment("download-pdf")
+                        .pathSegment("create-pdf")
                         .build()
                 }
                 .contentType(MediaType.APPLICATION_JSON)

@@ -10,7 +10,6 @@ import no.nav.yrkesskade.brevutsending.domene.DistribuerJournalpostRequest
 import no.nav.yrkesskade.brevutsending.domene.Dokument
 import no.nav.yrkesskade.brevutsending.domene.Dokumentvariant
 import no.nav.yrkesskade.brevutsending.domene.Dokumentvariantformat
-import no.nav.yrkesskade.brevutsending.domene.Fagsaksystem
 import no.nav.yrkesskade.brevutsending.domene.Filtype
 import no.nav.yrkesskade.brevutsending.domene.Journalposttype
 import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostRequest
@@ -42,8 +41,9 @@ class BrevService(
             pdfData = brev.innhold,
             template = brev.template
         )
-//        journalfoerUtgaaendeDokument(brev, pdf)
-//        distribuerJournalpost()
+//        val opprettJournalpostResponse = journalfoerUtgaaendeDokument(brev, pdf)
+//        distribuerJournalpost(opprettJournalpostResponse.journalpostId)
+//        giBeskjedTilbakeTilSaksbehandling()
     }
 
     fun distribuerJournalpost(journalpostId: String) {
@@ -70,11 +70,7 @@ class BrevService(
             journalfoerendeEnhet = "9999", // erstatte med enhet fra token
             eksternReferanseId = "", // noe lurt; kanskje referanse-id fra Behandling-tabellen i ys-sak?
             datoMottatt = null,
-            sak = Sak(
-                sakstype = Sakstype.FAGSAK,
-                fagsakId = "YRK-SAK-BLABLA0123",
-                fagsaksystem = Fagsaksystem.YRKESSKADE
-            ),
+            sak = Sak(sakstype = Sakstype.GENERELL_SAK),
             dokumenter = listOf(
                 Dokument(
                     brevkode = brev.brevkode,

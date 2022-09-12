@@ -11,9 +11,9 @@ import reactor.netty.http.client.HttpClient
 @Configuration
 class WebClientConfiguration(
     private val webClientBuilder: WebClient.Builder,
-    @Value("\${dokarkiv.url}") val dokarkivServiceURL: String,
-    @Value("\${dokdist.url}") val dokdistServiceURL: String,
-    @Value("\${YRKESSKADE_DOKGEN_API_URL}") val pdfServiceURL: String
+    @Value("\${api.client.dokarkiv.url}") val dokarkivServiceURL: String,
+    @Value("\${api.client.dokdist.url}") val dokdistServiceURL: String,
+    @Value("\${api.client.json-to-pdf.url}") val jsonToPdfServiceURL: String
     ) {
 
     companion object {
@@ -38,9 +38,9 @@ class WebClientConfiguration(
     }
 
     @Bean
-    fun pdfWebClient(): WebClient {
+    fun jsonToPdfServiceWebClient(): WebClient {
         return webClientBuilder
-            .baseUrl(pdfServiceURL)
+            .baseUrl(jsonToPdfServiceURL)
             .clientConnector(ReactorClientHttpConnector(HttpClient.newConnection()))
             .build()
     }

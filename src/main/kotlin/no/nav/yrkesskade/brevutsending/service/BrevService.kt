@@ -2,7 +2,7 @@ package no.nav.yrkesskade.brevutsending.service
 
 import no.nav.yrkesskade.brevutsending.client.DokarkivClient
 import no.nav.yrkesskade.brevutsending.client.DokdistClient
-import no.nav.yrkesskade.brevutsending.client.PdfClient
+import no.nav.yrkesskade.brevutsending.client.JsonToPdfClient
 import no.nav.yrkesskade.brevutsending.domene.AvsenderMottaker
 import no.nav.yrkesskade.brevutsending.domene.Bruker
 import no.nav.yrkesskade.brevutsending.domene.BrukerIdType
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service
 class BrevService(
     val dokarkivClient: DokarkivClient,
     val dokdistClient: DokdistClient,
-    val pdfClient: PdfClient
+    val jsonToPdfClient: JsonToPdfClient
 ) {
 
     companion object {
@@ -37,10 +37,7 @@ class BrevService(
 
     fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
         val brev = brevutsendingBestiltHendelse.brev
-        val pdf = pdfClient.lagPdf(
-            pdfData = brev.innhold,
-            template = brev.template
-        )
+        val pdf = jsonToPdfClient.genererPdfFraJson(brev.innhold.innhold)
 //        val opprettJournalpostResponse = journalfoerUtgaaendeDokument(brev, pdf)
 //        distribuerJournalpost(opprettJournalpostResponse.journalpostId)
 //        giBeskjedTilbakeTilSaksbehandling()

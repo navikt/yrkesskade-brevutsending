@@ -38,9 +38,6 @@ class BrevService(
     fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
         val brev = brevutsendingBestiltHendelse.brev
         val pdf = jsonToPdfClient.genererPdfFraJson(brev.innhold.innhold)
-//        val opprettJournalpostResponse = journalfoerUtgaaendeDokument(brev, pdf)
-//        distribuerJournalpost(opprettJournalpostResponse.journalpostId)
-//        giBeskjedTilbakeTilSaksbehandling()
     }
 
     fun distribuerJournalpost(journalpostId: String) {

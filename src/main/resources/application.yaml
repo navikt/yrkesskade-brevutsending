@@ -29,6 +29,8 @@ spring:
     enabled: true
   main:
     banner-mode: "off"
+  codec:
+    max-in-memory-size: 16MB # øker max størrelse på input streams i en WebClient
 management:
   endpoint:
     health:

@@ -2,7 +2,7 @@ package no.nav.yrkesskade.brevutsending.service
 
 import no.nav.yrkesskade.brevutsending.client.DokarkivClient
 import no.nav.yrkesskade.brevutsending.client.DokdistClient
-import no.nav.yrkesskade.brevutsending.client.PdfClient
+import no.nav.yrkesskade.brevutsending.client.JsonToPdfClient
 import no.nav.yrkesskade.brevutsending.domene.AvsenderMottaker
 import no.nav.yrkesskade.brevutsending.domene.Bruker
 import no.nav.yrkesskade.brevutsending.domene.BrukerIdType
@@ -10,7 +10,6 @@ import no.nav.yrkesskade.brevutsending.domene.DistribuerJournalpostRequest
 import no.nav.yrkesskade.brevutsending.domene.Dokument
 import no.nav.yrkesskade.brevutsending.domene.Dokumentvariant
 import no.nav.yrkesskade.brevutsending.domene.Dokumentvariantformat
-import no.nav.yrkesskade.brevutsending.domene.Fagsaksystem
 import no.nav.yrkesskade.brevutsending.domene.Filtype
 import no.nav.yrkesskade.brevutsending.domene.Journalposttype
 import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostRequest
@@ -27,7 +26,7 @@ import org.springframework.stereotype.Service
 class BrevService(
     val dokarkivClient: DokarkivClient,
     val dokdistClient: DokdistClient,
-    val pdfClient: PdfClient
+    val jsonToPdfClient: JsonToPdfClient
 ) {
 
     companion object {
@@ -38,12 +37,7 @@ class BrevService(
 
     fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
         val brev = brevutsendingBestiltHendelse.brev
-        val pdf = pdfClient.lagPdf(
-            pdfData = brev.innhold,
-            template = brev.template
-        )
-//        journalfoerUtgaaendeDokument(brev, pdf)
-//        distribuerJournalpost()
+        val pdf = jsonToPdfClient.genererPdfFraJson(brev.innhold.innhold)
     }
 
     fun distribuerJournalpost(journalpostId: String) {
@@ -70,11 +64,7 @@ class BrevService(
             journalfoerendeEnhet = "9999", // erstatte med enhet fra token
             eksternReferanseId = "", // noe lurt; kanskje referanse-id fra Behandling-tabellen i ys-sak?
             datoMottatt = null,
-            sak = Sak(
-                sakstype = Sakstype.FAGSAK,
-                fagsakId = "YRK-SAK-BLABLA0123",
-                fagsaksystem = Fagsaksystem.YRKESSKADE
-            ),
+            sak = Sak(sakstype = Sakstype.GENERELL_SAK),
             dokumenter = listOf(
                 Dokument(
                     brevkode = brev.brevkode,

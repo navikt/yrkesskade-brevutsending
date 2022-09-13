@@ -1,8 +1,15 @@
-YRKESSKADE_DOKGEN_API_URL: stub
-#YRKESSKADE_KODEVERK_API_URL: https://yrkesskade-kodeverk.dev.intern.nav.no
-saf.graphql.url: stub
-dokarkiv.url: stub
-dokdist.url: stub
+api:
+  client:
+    dokarkiv:
+      clientId: clientId
+      url: stub
+    dokdist:
+      url: stub
+    json-to-pdf:
+      url: stub
+    saf:
+      clientId: clientId
+      url: stub
 
 spring:
   config:

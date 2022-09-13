@@ -18,7 +18,7 @@
 		<kotlin.version>1.6.21</kotlin.version>
 		<token-support.version>1.3.9</token-support.version>
 		<graphql-kotlin.version>5.2.0</graphql-kotlin.version>
-		<yrkesskade-backend-felles.version>17db26cd_202207151752</yrkesskade-backend-felles.version>
+		<yrkesskade-backend-felles.version>d4d6286c_202209011909</yrkesskade-backend-felles.version>
 	</properties>
 	<dependencies>
 		<dependency>

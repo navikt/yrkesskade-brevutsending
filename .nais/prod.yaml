@@ -3,3 +3,5 @@ externalHosts:
   - host: dokarkiv.prod-fss-pub.nais.io
 springProfile: prod
 kafkaPool: nav-prod
+minReplicas: 1
+maxReplicas: 2

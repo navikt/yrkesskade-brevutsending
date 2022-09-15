@@ -53,7 +53,6 @@ class BrevService(
 
     fun journalfoerUtgaaendeDokument(brev: Brev, mottaker: Mottaker, pdf: ByteArray): OpprettJournalpostResponse? {
         val opprettJournalpostRequest = OpprettJournalpostRequest(
-            forsoekFerdigstill = true,
             tittel = brev.tittel,
             journalposttype = Journalposttype.UTGAAENDE,
             avsenderMottaker = AvsenderMottaker(

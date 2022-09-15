@@ -39,6 +39,7 @@ class DokarkivClient(
                         .pathSegment("journalpostapi")
                         .pathSegment("v1")
                         .pathSegment("journalpost")
+                        .queryParam("forsoekFerdigstill", true)
                         .build()
                 }
                 .contentType(MediaType.APPLICATION_JSON)

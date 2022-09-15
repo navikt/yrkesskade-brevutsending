@@ -40,7 +40,7 @@ enum class Sakstype {
 }
 
 data class AvsenderMottaker(
-    val navn: String?,
+    val navn: String? = null,
     val id: String,
     val idType: BrukerIdType,
 )

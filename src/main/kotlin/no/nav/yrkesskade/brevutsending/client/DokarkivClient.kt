@@ -1,10 +1,12 @@
 package no.nav.yrkesskade.brevutsending.client
 
+import no.nav.familie.log.mdc.MDCConstants
 import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostRequest
 import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostResponse
 import no.nav.yrkesskade.brevutsending.util.TokenUtil
 import no.nav.yrkesskade.brevutsending.util.getLogger
 import no.nav.yrkesskade.brevutsending.util.getSecureLogger
+import org.slf4j.MDC
 import org.springframework.http.MediaType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
@@ -41,7 +43,7 @@ class DokarkivClient(
                 }
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer ${tokenUtil.getAppAccessTokenWithDokarkivScope()}")
-//                .header("Nav-Callid", UUID.randomUUID().toString())
+                .header("Nav-Callid", MDC.get(MDCConstants.MDC_CALL_ID))
                 .header("Nav-Consumer-Id", applicationName)
                 .bodyValue(opprettJournalpostRequest)
                 .retrieve()

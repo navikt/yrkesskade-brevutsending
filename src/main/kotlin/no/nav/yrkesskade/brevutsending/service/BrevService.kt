@@ -1,5 +1,6 @@
 package no.nav.yrkesskade.brevutsending.service
 
+import no.nav.familie.log.mdc.MDCConstants
 import no.nav.yrkesskade.brevutsending.client.DokarkivClient
 import no.nav.yrkesskade.brevutsending.client.DokdistClient
 import no.nav.yrkesskade.brevutsending.client.JsonToPdfClient
@@ -19,7 +20,9 @@ import no.nav.yrkesskade.brevutsending.domene.Sakstype
 import no.nav.yrkesskade.brevutsending.util.getSecureLogger
 import no.nav.yrkesskade.saksbehandling.model.Brev
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
+import no.nav.yrkesskade.saksbehandling.model.Mottaker
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.stereotype.Service
 
 @Service
@@ -38,6 +41,7 @@ class BrevService(
     fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
         val brev = brevutsendingBestiltHendelse.brev
         val pdf = jsonToPdfClient.genererPdfFraJson(brev.innhold.innhold)
+        journalfoerUtgaaendeDokument(brev, brevutsendingBestiltHendelse.mottaker, pdf)
     }
 
     fun distribuerJournalpost(journalpostId: String) {
@@ -45,24 +49,23 @@ class BrevService(
         dokdistClient.distribuerJournalpost(distribuerJournalpostRequest)
     }
 
-    fun journalfoerUtgaaendeDokument(brev: Brev, pdf: ByteArray): OpprettJournalpostResponse? {
+    fun journalfoerUtgaaendeDokument(brev: Brev, mottaker: Mottaker, pdf: ByteArray): OpprettJournalpostResponse? {
         val opprettJournalpostRequest = OpprettJournalpostRequest(
             forsoekFerdigstill = true,
             tittel = brev.tittel,
             journalposttype = Journalposttype.UTGAAENDE,
             avsenderMottaker = AvsenderMottaker(
-                navn = null, // mottakers navn -- ikke nødvendig når idtype er fnr
-                id = "", // mottakers fnr
+                id = mottaker.foedselsnummer,
                 idType = BrukerIdType.FNR
             ),
             bruker = Bruker(
-                id = "", // mottakers fnr
+                id = mottaker.foedselsnummer,
                 idType = BrukerIdType.FNR
             ),
             tema = "YRK",
-            kanal = "NAV_NO", // stemmer dette??
-            journalfoerendeEnhet = "9999", // erstatte med enhet fra token
-            eksternReferanseId = "", // noe lurt; kanskje referanse-id fra Behandling-tabellen i ys-sak?
+            kanal = null,
+            journalfoerendeEnhet = brev.enhet,
+            eksternReferanseId = MDC.get(MDCConstants.MDC_CALL_ID), // eventuelt behandlingId
             datoMottatt = null,
             sak = Sak(sakstype = Sakstype.GENERELL_SAK),
             dokumenter = listOf(

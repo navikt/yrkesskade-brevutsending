@@ -1,13 +1,14 @@
 package no.nav.yrkesskade.brevutsending.client
 
+import no.nav.familie.log.mdc.MDCConstants
 import no.nav.yrkesskade.brevutsending.domene.DistribuerJournalpostRequest
 import no.nav.yrkesskade.brevutsending.domene.DistribuerJournalpostResponse
 import no.nav.yrkesskade.brevutsending.util.TokenUtil
 import no.nav.yrkesskade.brevutsending.util.getLogger
 import no.nav.yrkesskade.brevutsending.util.getSecureLogger
+import org.slf4j.MDC
 import org.springframework.http.MediaType
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -19,7 +20,7 @@ class DokdistClient(
     private val dokdistWebClient: WebClient,
     private val tokenUtil: TokenUtil,
     @Value("\${spring.application.name}") val applicationName: String
-) {
+): AbstractRestClient("Dokdist") {
 
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")
@@ -40,34 +41,12 @@ class DokdistClient(
                 }
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer ${tokenUtil.getAppAccessTokenWithSafScope()}")
-//                .header("Nav-Callid", UUID.randomUUID().toString())
+                .header("Nav-Callid", MDC.get(MDCConstants.MDC_CALL_ID))
                 .header("Nav-Consumer-Id", applicationName)
                 .bodyValue(distribuerJournalpostRequest)
                 .retrieve()
                 .bodyToMono<DistribuerJournalpostResponse>()
-                .block() ?: throw RuntimeException("Kunne ikke journalføre dokument")
-        }
-    }
-
-    private fun <T> logTimingAndWebClientResponseException(methodName: String, function: () -> T): T {
-        val start: Long = System.currentTimeMillis()
-        try {
-            return function.invoke()
-        } catch (ex: WebClientResponseException) {
-            secureLogger.error(
-                "Got a {} error calling Dokdist {} {} with message {}",
-                ex.statusCode,
-                ex.request?.method ?: "-",
-                ex.request?.uri ?: "-",
-                ex.responseBodyAsString
-            )
-            throw ex
-        } catch (rtex: RuntimeException) {
-            log.warn("Caught RuntimeException", rtex)
-            throw rtex
-        } finally {
-            val end: Long = System.currentTimeMillis()
-            log.info("Method {} took {} millis", methodName, (end - start))
+                .block() ?: throw RuntimeException("Kunne ikke distribuere dokument")
         }
     }
 }

@@ -1,6 +1,6 @@
 package no.nav.yrkesskade.brevutsending.kafka;
 
-import no.nav.yrkesskade.brevutsending.task.ProsesserBrevTilUtsendingTask
+import no.nav.yrkesskade.brevutsending.task.GenererOgJournalfoerBrevTask
 import no.nav.yrkesskade.brevutsending.util.kallMetodeMedCallId
 import no.nav.yrkesskade.prosessering.domene.TaskRepository
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
@@ -22,7 +22,7 @@ class BrevutsendingBestiltHendelseConsumer(
     @Transactional
     fun listen(record: BrevutsendingBestiltHendelse) {
         kallMetodeMedCallId(record.metadata.navCallId) {
-            taskRepository.save(ProsesserBrevTilUtsendingTask.opprettTask(record))
+            taskRepository.save(GenererOgJournalfoerBrevTask.opprettTask(record))
         }
     }
 }

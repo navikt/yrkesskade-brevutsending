@@ -8,7 +8,6 @@ import no.nav.yrkesskade.brevutsending.util.getSecureLogger
 import no.nav.yrkesskade.prosessering.AsyncTaskStep
 import no.nav.yrkesskade.prosessering.TaskStepBeskrivelse
 import no.nav.yrkesskade.prosessering.domene.Task
-import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -16,13 +15,13 @@ import java.lang.invoke.MethodHandles
 
 
 @TaskStepBeskrivelse(
-    taskStepType = ProsesserBrevTilUtsendingTask.TASK_STEP_TYPE,
-    beskrivelse = "Prosessering av brev til utsending",
+    taskStepType = DistribuerBrevTask.TASK_STEP_TYPE,
+    beskrivelse = "Distribuere journalpost",
     maxAntallFeil = 10,
     triggerTidVedFeilISekunder = 60 * 30
 )
 @Component
-class ProsesserBrevTilUtsendingTask(
+class DistribuerBrevTask(
     val brevService: BrevService
 ) : AsyncTaskStep {
 
@@ -31,27 +30,26 @@ class ProsesserBrevTilUtsendingTask(
     val jacksonObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
     override fun doTask(task: Task) {
-        log.info("Starter ProsesserBrevTilUtsendingTask")
-        secureLogger.info("ProsesserBrevTilUtsendingTask kjoerer med payload ${task.payload}")
+        log.info("Starter DistribuerBrevTask")
+        secureLogger.info("DistribuerBrevTask kjoerer med payload ${task.payload}")
 
-        val payload = jacksonObjectMapper.readValue<ProsesserBrevTilUtsendingTaskPayloadDto>(task.payload)
+        val payload = jacksonObjectMapper.readValue<DistribuerBrevTaskPayloadDto>(task.payload)
+        brevService.distribuerJournalpost(payload.journalpostId)
 
-        brevService.behandleBrevutsendingBestilling(payload.brevutsendingBestiltHendelse)
-
-        log.info("ProsesserBrevTilUtsendingTask ferdig")
+        log.info("DistribuerBrevTask ferdig")
     }
 
     companion object {
-        fun opprettTask(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse): Task {
+        fun opprettTask(journalpostId: String): Task {
             val jacksonObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
             return Task(
                 type = TASK_STEP_TYPE,
-                payload = jacksonObjectMapper.writeValueAsString(ProsesserBrevTilUtsendingTaskPayloadDto(brevutsendingBestiltHendelse))
+                payload = jacksonObjectMapper.writeValueAsString(DistribuerBrevTaskPayloadDto(journalpostId))
             )
         }
 
-        const val TASK_STEP_TYPE = "ProsesserBrevTilUtsending"
+        const val TASK_STEP_TYPE = "DistribuerBrev"
     }
 }
 
-data class ProsesserBrevTilUtsendingTaskPayloadDto(val brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse)
+data class DistribuerBrevTaskPayloadDto(val journalpostId: String)

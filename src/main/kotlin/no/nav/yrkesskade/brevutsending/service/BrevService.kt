@@ -38,17 +38,9 @@ class BrevService(
         private val secureLogger = getSecureLogger()
     }
 
-    fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
-        val brev = brevutsendingBestiltHendelse.brev
-        val pdf = jsonToPdfClient.genererPdfFraJson(brev.innhold.innhold)
-        val journalpostResponse = journalfoerUtgaaendeDokument(brev, brevutsendingBestiltHendelse.mottaker, pdf)
-        distribuerJournalpost(journalpostResponse.journalpostId)
-    }
+    fun genererPdf(brev: Brev): ByteArray = jsonToPdfClient.genererPdfFraJson(brev.innhold.innhold)
 
-    fun distribuerJournalpost(journalpostId: String) {
-        val distribuerJournalpostRequest = DistribuerJournalpostRequest(journalpostId = journalpostId)
-        dokdistClient.distribuerJournalpost(distribuerJournalpostRequest)
-    }
+    fun distribuerJournalpost(journalpostId: String) = dokdistClient.distribuerJournalpost(DistribuerJournalpostRequest(journalpostId = journalpostId))
 
     fun journalfoerUtgaaendeDokument(brev: Brev, mottaker: Mottaker, pdf: ByteArray): OpprettJournalpostResponse {
         val opprettJournalpostRequest = OpprettJournalpostRequest(
@@ -66,7 +58,7 @@ class BrevService(
             kanal = null,
             journalfoerendeEnhet = brev.enhet,
             eksternReferanseId = MDC.get(MDCConstants.MDC_CALL_ID), // eventuelt behandlingId
-            datoMottatt = null,
+            datoMottatt = null, // settes ikke for utgående dokumenter
             sak = Sak(sakstype = Sakstype.GENERELL_SAK),
             dokumenter = listOf(
                 Dokument(

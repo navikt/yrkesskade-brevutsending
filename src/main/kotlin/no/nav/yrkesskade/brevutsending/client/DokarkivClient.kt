@@ -30,7 +30,7 @@ class DokarkivClient(
     }
 
     @Retryable
-    fun journalfoerDokument(opprettJournalpostRequest: OpprettJournalpostRequest): OpprettJournalpostResponse? {
+    fun journalfoerDokument(opprettJournalpostRequest: OpprettJournalpostRequest): OpprettJournalpostResponse {
         log.info("Journalfører dokument ${opprettJournalpostRequest.tittel} med ekstern referanseId ${opprettJournalpostRequest.eksternReferanseId}")
         return logTimingAndWebClientResponseException("journalførDokument") {
             dokarkivWebClient.post()
@@ -53,7 +53,7 @@ class DokarkivClient(
         }
     }
 
-    private fun <T> logTimingAndWebClientResponseException(methodName: String, function: () -> T): T? {
+    private fun <T> logTimingAndWebClientResponseException(methodName: String, function: () -> T): T {
         val start: Long = System.currentTimeMillis()
         try {
             return function.invoke()
@@ -67,7 +67,7 @@ class DokarkivClient(
             )
             if (ex.statusCode == HttpStatus.CONFLICT) {
                 log.warn("Dokumentet har allerede blitt journalført.")
-                return null
+                throw ex
             }
             throw ex
         } catch (rtex: RuntimeException) {

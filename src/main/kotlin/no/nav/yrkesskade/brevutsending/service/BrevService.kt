@@ -41,9 +41,8 @@ class BrevService(
     fun behandleBrevutsendingBestilling(brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse) {
         val brev = brevutsendingBestiltHendelse.brev
         val pdf = jsonToPdfClient.genererPdfFraJson(brev.innhold.innhold)
-        journalfoerUtgaaendeDokument(brev, brevutsendingBestiltHendelse.mottaker, pdf).also {
-            log.info("Journalfoert utgående brev med journalpostId=${it?.journalpostId}, ferdigstilt=${it?.journalpostferdigstilt}")
-        }
+        val journalpostResponse = journalfoerUtgaaendeDokument(brev, brevutsendingBestiltHendelse.mottaker, pdf)
+        distribuerJournalpost(journalpostResponse.journalpostId)
     }
 
     fun distribuerJournalpost(journalpostId: String) {
@@ -51,7 +50,7 @@ class BrevService(
         dokdistClient.distribuerJournalpost(distribuerJournalpostRequest)
     }
 
-    fun journalfoerUtgaaendeDokument(brev: Brev, mottaker: Mottaker, pdf: ByteArray): OpprettJournalpostResponse? {
+    fun journalfoerUtgaaendeDokument(brev: Brev, mottaker: Mottaker, pdf: ByteArray): OpprettJournalpostResponse {
         val opprettJournalpostRequest = OpprettJournalpostRequest(
             tittel = brev.tittel,
             journalposttype = Journalposttype.UTGAAENDE,
@@ -84,7 +83,9 @@ class BrevService(
             )
         )
 
-        return dokarkivClient.journalfoerDokument(opprettJournalpostRequest)
+        return dokarkivClient.journalfoerDokument(opprettJournalpostRequest).also {
+            log.info("Journalfoert utgående brev med journalpostId=${it.journalpostId}, ferdigstilt=${it.journalpostferdigstilt}")
+        }
     }
 }
 

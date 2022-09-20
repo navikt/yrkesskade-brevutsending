@@ -47,6 +47,8 @@ class DokdistClient(
                 .retrieve()
                 .bodyToMono<DistribuerJournalpostResponse>()
                 .block() ?: throw RuntimeException("Kunne ikke distribuere dokument")
+        }.also {
+            log.info("Distribuert journalpost ${distribuerJournalpostRequest.journalpostId}, bestillingsId: ${it.bestillingsId}")
         }
     }
 }

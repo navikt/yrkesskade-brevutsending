@@ -3,6 +3,7 @@ package no.nav.yrkesskade.brevutsending.task
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.familie.log.mdc.MDCConstants
 import no.nav.yrkesskade.brevutsending.kafka.BrevutsendingUtfoertClient
 import no.nav.yrkesskade.brevutsending.service.BrevService
 import no.nav.yrkesskade.brevutsending.util.getSecureLogger
@@ -10,8 +11,10 @@ import no.nav.yrkesskade.prosessering.AsyncTaskStep
 import no.nav.yrkesskade.prosessering.TaskStepBeskrivelse
 import no.nav.yrkesskade.prosessering.domene.Task
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingUtfoertHendelse
+import no.nav.yrkesskade.saksbehandling.model.BrevutsendingUtfoertMetadata
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import java.lang.invoke.MethodHandles
 
@@ -38,7 +41,12 @@ class DistribuerBrevTask(
 
         val payload = jacksonObjectMapper.readValue<DistribuerBrevTaskPayloadDto>(task.payload)
         brevService.distribuerJournalpost(payload.journalpostId)
-        brevutsendingUtfoertClient.sendDokumentdistribusjonUtfoertHendelse(BrevutsendingUtfoertHendelse(payload.journalpostId))
+        brevutsendingUtfoertClient.sendDokumentdistribusjonUtfoertHendelse(
+            BrevutsendingUtfoertHendelse(
+                journalpostId = payload.journalpostId,
+                metadata = BrevutsendingUtfoertMetadata(MDC.get(MDCConstants.MDC_CALL_ID))
+            )
+        )
 
         log.info("DistribuerBrevTask ferdig")
     }

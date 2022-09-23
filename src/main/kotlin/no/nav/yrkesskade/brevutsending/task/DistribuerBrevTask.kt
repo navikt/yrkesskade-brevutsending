@@ -44,6 +44,7 @@ class DistribuerBrevTask(
         brevutsendingUtfoertClient.sendDokumentdistribusjonUtfoertHendelse(
             BrevutsendingUtfoertHendelse(
                 journalpostId = payload.journalpostId,
+                behandlingId = payload.behandlingId,
                 metadata = BrevutsendingUtfoertMetadata(MDC.get(MDCConstants.MDC_CALL_ID))
             )
         )
@@ -52,11 +53,13 @@ class DistribuerBrevTask(
     }
 
     companion object {
-        fun opprettTask(journalpostId: String): Task {
+        fun opprettTask(journalpostId: String, behandlingId: Long): Task {
             val jacksonObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
             return Task(
                 type = TASK_STEP_TYPE,
-                payload = jacksonObjectMapper.writeValueAsString(DistribuerBrevTaskPayloadDto(journalpostId))
+                payload = jacksonObjectMapper.writeValueAsString(
+                    DistribuerBrevTaskPayloadDto(journalpostId, behandlingId)
+                )
             )
         }
 
@@ -64,4 +67,7 @@ class DistribuerBrevTask(
     }
 }
 
-data class DistribuerBrevTaskPayloadDto(val journalpostId: String)
+data class DistribuerBrevTaskPayloadDto(
+    val journalpostId: String,
+    val behandlingId: Long
+)

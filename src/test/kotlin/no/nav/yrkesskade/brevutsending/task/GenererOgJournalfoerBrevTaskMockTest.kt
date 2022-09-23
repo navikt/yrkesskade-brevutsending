@@ -29,7 +29,10 @@ internal class GenererOgJournalfoerBrevTaskMockTest {
         val opprettJournalpostOkRespons = opprettJournalpostOkRespons()
         every { brevServiceMock.genererPdf(any()) } returns "pdf".toByteArray()
         every { brevServiceMock.journalfoerUtgaaendeDokument(any(), any(), any()) } returns opprettJournalpostOkRespons
-        every { taskRepositoryMock.save(any()) } returns DistribuerBrevTask.opprettTask(opprettJournalpostOkRespons.journalpostId)
+        every { taskRepositoryMock.save(any()) } returns DistribuerBrevTask.opprettTask(
+            opprettJournalpostOkRespons.journalpostId,
+            brevutsendingBestiltHendelse.behandlingId
+        )
 
     }
 

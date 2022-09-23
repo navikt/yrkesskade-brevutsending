@@ -45,8 +45,12 @@ class GenererOgJournalfoerBrevTask(
             pdf
         )
 
-        val distribuerBrevTask =
-            taskRepository.save(DistribuerBrevTask.opprettTask(opprettJournalpostResponse.journalpostId))
+        val distribuerBrevTask = taskRepository.save(
+            DistribuerBrevTask.opprettTask(
+                opprettJournalpostResponse.journalpostId,
+                payload.brevutsendingBestiltHendelse.behandlingId
+            )
+        )
 
         log.info("GenererOgJournalfoerBrevTask ferdig, starter DistribuerBrevTask med id ${distribuerBrevTask.id}")
     }

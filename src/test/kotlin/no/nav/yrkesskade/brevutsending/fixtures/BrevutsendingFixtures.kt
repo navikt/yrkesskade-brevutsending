@@ -13,7 +13,7 @@ import java.util.UUID
 
 fun brevutsendingBestiltHendelse(): BrevutsendingBestiltHendelse {
     return BrevutsendingBestiltHendelse(
-        Brev(
+        brev = Brev(
             tittel = "tittel",
             brevkode = "NAV",
             enhet = "4849",
@@ -30,6 +30,7 @@ fun brevutsendingBestiltHendelse(): BrevutsendingBestiltHendelse {
                 )
             )
         ),
+        behandlingId = 1234,
         mottaker = Mottaker(foedselsnummer = "012345678910"),
         metadata = BrevutsendingMetadata(
             tidspunktBestilt = Instant.now(),

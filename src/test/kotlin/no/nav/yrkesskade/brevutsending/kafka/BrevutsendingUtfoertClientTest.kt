@@ -24,6 +24,7 @@ internal class BrevutsendingUtfoertClientTest : AbstractIT() {
     @Test
     fun sendDokumentdistribusjonUtfoertHendelse() {
         val brevutsendingUtfoertHendelse = BrevutsendingUtfoertHendelse(
+            1234,
             "1234",
             BrevutsendingUtfoertMetadata(UUID.randomUUID().toString())
         )

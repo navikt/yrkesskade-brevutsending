@@ -22,7 +22,7 @@ internal class DistribuerBrevTaskMockTest {
     private val brevServiceMock: BrevService = mockk()
     private val brevutsendingUtfoertClient: BrevutsendingUtfoertClient = mockk()
 
-    private val task = DistribuerBrevTask.opprettTask(opprettJournalpostOkRespons().journalpostId)
+    private val task = DistribuerBrevTask.opprettTask(opprettJournalpostOkRespons().journalpostId, 1234)
     private val distribuerBrevTask = DistribuerBrevTask(brevServiceMock, brevutsendingUtfoertClient)
 
     @BeforeEach

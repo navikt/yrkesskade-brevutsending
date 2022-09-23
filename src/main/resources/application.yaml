@@ -4,6 +4,9 @@ spring:
   kafka:
     bootstrap-servers: ${KAFKA_BROKERS}
     client-id: yrkesskade-brevutsending
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -59,3 +62,4 @@ prosessering:
 kafka:
   topic:
     brevutsending-bestilt: yrkesskade.privat-yrkesskade-brevutsending-bestilt
+    brevutsending-utfoert: yrkesskade.privat-yrkesskade-brevutsending-utfoert

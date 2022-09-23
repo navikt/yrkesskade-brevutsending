@@ -1,16 +1,19 @@
 package no.nav.yrkesskade.brevutsending.config
 
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
+import no.nav.yrkesskade.saksbehandling.model.BrevutsendingUtfoertHendelse
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
+import org.springframework.kafka.core.DefaultKafkaProducerFactory
+import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.core.ProducerFactory
 import org.springframework.kafka.listener.CommonContainerStoppingErrorHandler
-import org.springframework.kafka.support.serializer.JsonDeserializer
 
 @Configuration
-class KafkaConsumerConfig : AbstractKafkaConfig() {
+class KafkaConfig(val kafkaProperties: KafkaProperties) : AbstractKafkaConfig() {
 
     @Bean
     fun brevutsendingBestiltListenerContainerFactory(
@@ -25,5 +28,17 @@ class KafkaConsumerConfig : AbstractKafkaConfig() {
             this.setCommonErrorHandler(CommonContainerStoppingErrorHandler())
             this.setRetryTemplate(retryTemplate())
         }
+    }
+
+    @Bean
+    fun brevutsendingUtfoertHendelseProducerFactory(): ProducerFactory<String, BrevutsendingUtfoertHendelse> {
+        return DefaultKafkaProducerFactory(kafkaProperties.buildProducerProperties())
+    }
+
+    @Bean
+    fun skademeldingKafkaTemplate(
+        brevutsendingUtfoertHendelseProducerFactory: ProducerFactory<String,  BrevutsendingUtfoertHendelse>
+    ): KafkaTemplate<String, BrevutsendingUtfoertHendelse> {
+        return KafkaTemplate(brevutsendingUtfoertHendelseProducerFactory)
     }
 }

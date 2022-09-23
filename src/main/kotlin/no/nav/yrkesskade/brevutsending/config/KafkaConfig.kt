@@ -36,7 +36,7 @@ class KafkaConfig(val kafkaProperties: KafkaProperties) : AbstractKafkaConfig() 
     }
 
     @Bean
-    fun skademeldingKafkaTemplate(
+    fun brevutsendingUtfoertHendelseKafkaTemplate(
         brevutsendingUtfoertHendelseProducerFactory: ProducerFactory<String,  BrevutsendingUtfoertHendelse>
     ): KafkaTemplate<String, BrevutsendingUtfoertHendelse> {
         return KafkaTemplate(brevutsendingUtfoertHendelseProducerFactory)

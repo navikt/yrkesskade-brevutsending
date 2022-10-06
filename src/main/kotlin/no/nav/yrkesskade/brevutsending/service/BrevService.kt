@@ -18,9 +18,8 @@ import no.nav.yrkesskade.brevutsending.domene.OpprettJournalpostResponse
 import no.nav.yrkesskade.brevutsending.domene.Sak
 import no.nav.yrkesskade.brevutsending.domene.Sakstype
 import no.nav.yrkesskade.brevutsending.util.getSecureLogger
-import no.nav.yrkesskade.saksbehandling.model.Brev
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
-import no.nav.yrkesskade.saksbehandling.model.Mottaker
+import no.nav.yrkesskade.saksbehandling.model.pdf.PdfInnholdElement
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.stereotype.Service
@@ -38,32 +37,35 @@ class BrevService(
         private val secureLogger = getSecureLogger()
     }
 
-    fun genererPdf(brev: Brev): ByteArray = jsonToPdfClient.genererPdfFraJson(brev.innhold.innhold)
+    fun genererPdf(brevinnhold: List<PdfInnholdElement>): ByteArray = jsonToPdfClient.genererPdfFraJson(brevinnhold)
 
     fun distribuerJournalpost(journalpostId: String) = dokdistClient.distribuerJournalpost(DistribuerJournalpostRequest(journalpostId = journalpostId))
 
-    fun journalfoerUtgaaendeDokument(brev: Brev, mottaker: Mottaker, pdf: ByteArray): OpprettJournalpostResponse {
+    fun journalfoerUtgaaendeDokument(
+        brevutsendingBestiltHendelse: BrevutsendingBestiltHendelse,
+        pdf: ByteArray
+    ): OpprettJournalpostResponse {
         val opprettJournalpostRequest = OpprettJournalpostRequest(
-            tittel = brev.tittel,
+            tittel = brevutsendingBestiltHendelse.tittel,
             journalposttype = Journalposttype.UTGAAENDE,
             avsenderMottaker = AvsenderMottaker(
-                id = mottaker.foedselsnummer,
+                id = brevutsendingBestiltHendelse.mottaker.foedselsnummer,
                 idType = BrukerIdType.FNR
             ),
             bruker = Bruker(
-                id = mottaker.foedselsnummer,
+                id = brevutsendingBestiltHendelse.mottaker.foedselsnummer,
                 idType = BrukerIdType.FNR
             ),
             tema = "YRK",
             kanal = null,
-            journalfoerendeEnhet = brev.enhet,
+            journalfoerendeEnhet = brevutsendingBestiltHendelse.enhet,
             eksternReferanseId = MDC.get(MDCConstants.MDC_CALL_ID), // eventuelt behandlingId
             datoMottatt = null, // settes ikke for utgående dokumenter
             sak = Sak(sakstype = Sakstype.GENERELL_SAK),
             dokumenter = listOf(
                 Dokument(
-                    brevkode = brev.brevkode,
-                    tittel = brev.tittel,
+                    brevkode = brevutsendingBestiltHendelse.tittel,
+                    tittel = brevutsendingBestiltHendelse.tittel,
                     dokumentvarianter = listOf(
                         Dokumentvariant(
                             filtype = Filtype.PDFA,

@@ -1,33 +1,24 @@
 package no.nav.yrkesskade.brevutsending.fixtures
 
-import no.nav.yrkesskade.saksbehandling.model.Brev
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingBestiltHendelse
 import no.nav.yrkesskade.saksbehandling.model.BrevutsendingMetadata
 import no.nav.yrkesskade.saksbehandling.model.Mottaker
-import no.nav.yrkesskade.saksbehandling.model.pdf.PdfData
 import no.nav.yrkesskade.saksbehandling.model.pdf.PdfInnholdElement
 import no.nav.yrkesskade.saksbehandling.model.pdf.PdfTekstElement
-import no.nav.yrkesskade.saksbehandling.model.pdf.PdfTemplate
 import java.time.Instant
 import java.util.UUID
 
 fun brevutsendingBestiltHendelse(): BrevutsendingBestiltHendelse {
     return BrevutsendingBestiltHendelse(
-        brev = Brev(
-            tittel = "tittel",
-            brevkode = "NAV",
-            enhet = "4849",
-            template = PdfTemplate.VEILEDNINGSBREV_TANNLEGEERKLAERING,
-            innhold = PdfData(
-                brevtype = "brevtype",
-                uuid = UUID.randomUUID().toString(),
-                innhold = listOf(PdfInnholdElement(
-                    type="paragraph",
-                    children = listOf(PdfTekstElement(
-                        text = "test")
-                    ),
-                    align = "left"),
-                )
+        brevinnhold = listOf(
+            PdfInnholdElement(
+                type = "paragraph",
+                children = listOf(
+                    PdfTekstElement(
+                        text = "test"
+                    )
+                ),
+                align = "left"
             )
         ),
         behandlingId = 1234,
@@ -35,6 +26,8 @@ fun brevutsendingBestiltHendelse(): BrevutsendingBestiltHendelse {
         metadata = BrevutsendingMetadata(
             tidspunktBestilt = Instant.now(),
             navCallId = UUID.randomUUID().toString()
-        )
+        ),
+        enhet = "4849",
+        tittel = "Veiledningsbrev Tannlegeerklæring"
     )
 }

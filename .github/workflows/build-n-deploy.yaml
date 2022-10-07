@@ -34,7 +34,7 @@ jobs:
     - name: Build and push the Docker image
       run: docker build --pull --tag ${IMAGE} . && docker push ${IMAGE}
   deployAppToDev:
-#    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/dev'
     name: Deploy app to dev
     needs: build
     runs-on: ubuntu-18.04
@@ -48,7 +48,7 @@ jobs:
           RESOURCE: .nais/nais.yaml
           VARS: .nais/dev/dev.yaml
   deployAlertsToDev:
-#    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/dev'
     name: Deploy alerts to dev
     needs: build
     runs-on: ubuntu-18.04

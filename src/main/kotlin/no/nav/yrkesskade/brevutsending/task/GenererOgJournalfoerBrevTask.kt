@@ -38,10 +38,9 @@ class GenererOgJournalfoerBrevTask(
 
         val payload = jacksonObjectMapper.readValue<GenererOgJournalfoerBrevTaskPayloadDto>(task.payload)
 
-        val pdf = brevService.genererPdf(payload.brevutsendingBestiltHendelse.brev)
+        val pdf = brevService.genererPdf(payload.brevutsendingBestiltHendelse.brevinnhold)
         val opprettJournalpostResponse = brevService.journalfoerUtgaaendeDokument(
-            payload.brevutsendingBestiltHendelse.brev,
-            payload.brevutsendingBestiltHendelse.mottaker,
+            payload.brevutsendingBestiltHendelse,
             pdf
         )
 
